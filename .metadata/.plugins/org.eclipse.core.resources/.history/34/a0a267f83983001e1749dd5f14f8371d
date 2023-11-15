@@ -1,0 +1,12 @@
+
+public class Calculator {
+	String operation;
+	float num1, num2;
+	
+	
+	public Calculator(RequestDecoder dec) {
+		operation = dec.operation;
+		num1 = dec.num1;
+		num2 = dec.num2;
+	}
+}

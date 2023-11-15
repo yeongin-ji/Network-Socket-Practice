@@ -1,0 +1,101 @@
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class TCPServer1 {
+	public static void main(String[] args) {
+		ServerSocket welcomeSocket;
+		Socket connectionSocket;
+		int nPort;
+		
+		try {
+			nPort = 6789;
+			welcomeSocket = new ServerSocket(nPort);
+			System.out.println("Server start.. (port#=" + nPort + ")\n ");
+			
+			ExecutorService pool = Executors.newFixedThreadPool(20);
+			
+			//wait for a new connection on nPort#
+			while(true) {
+				connectionSocket = welcomeSocket.accept();
+				pool.execute(new TServer(connectionSocket));			
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e);
+		}
+	}
+	
+	private static class TServer implements Runnable{
+		private Socket socket;
+		String clientSentence;
+		
+		TServer(Socket socket){
+			this.socket = socket;
+		}
+		
+		@Override
+		public void run() {
+			System.out.println("Connected: " + socket);
+			try {
+				//get input, output stream
+				DataInputStream inFromClient = new DataInputStream(socket.getInputStream());
+				DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
+				
+				//read client request
+				clientSentence = inFromClient.readUTF();
+				System.out.println("FROM CLIENT:\n" + clientSentence);
+				
+				//decoding client request
+				RequestDecoder dec = new RequestDecoder(clientSentence);
+				dec.decode();
+				
+				//calculate the result
+				Calculator cal = new Calculator(dec);
+				ResponseEncoder enc = new ResponseEncoder();
+				String operation = "";
+				if(cal.getOperation() != null)
+					operation = cal.getOperation();
+				int result = 0;
+				float divideResult = 0.0f;
+				switch(operation) {
+				case "ADD":
+					result = cal.getAddResult();
+					break;
+				case "SUB":
+					result = cal.getSubResult();
+					break;
+				case "MUL":
+					result = cal.getMulResult();
+					break;
+				case "DIV":
+					if(cal.checkDivideByZero()) enc.setResponseCode(401);
+					else divideResult = cal.getDivResult();
+					break;
+				default:
+					enc.setResponseCode(400);
+				}
+				
+				//encoding server response
+				if(operation.equals("DIV"))
+					enc.setResult(divideResult);
+				else
+					enc.setResult(result);
+				enc.encode();
+				clientSentence = enc.getEncodedSentence();
+				
+				//response to client
+				outToClient.writeUTF(clientSentence + "\n");
+				outToClient.flush();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		
+	}
+}

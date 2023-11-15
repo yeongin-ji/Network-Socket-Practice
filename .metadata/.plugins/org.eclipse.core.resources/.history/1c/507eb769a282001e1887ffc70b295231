@@ -1,0 +1,21 @@
+
+public class requestEncoder {
+	final String protocolVersion = "HMDP/1.0";
+	String request;
+	String encodedRequest;
+	String argu[] = new String[3];
+	
+	
+	public requestEncoder(String request) { //ADD 1 2
+		// TODO Auto-generated constructor stub
+		this.request = request;
+	}
+	
+	public void encode(String IP, int port) {
+		encodedRequest = 
+	}
+	
+	public String getEncodedRequest() {
+		return encodedRequest;
+	}
+}

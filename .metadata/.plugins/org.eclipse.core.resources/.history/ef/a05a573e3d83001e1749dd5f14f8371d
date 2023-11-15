@@ -1,0 +1,73 @@
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class TCPServer1 {
+	public static void main(String[] args) {
+		ServerSocket welcomeSocket;
+		String clientSentence;
+		int nPort;
+		
+		try {
+			nPort = 6789;
+			welcomeSocket = new ServerSocket(nPort);
+			System.out.println("Server start.. (port#=" + nPort + ")\n ");
+			
+			//wait for a new connection on nPort#
+			Socket connectionSocket = welcomeSocket.accept();
+			System.out.println("server accepted.\n");
+			
+			//get input, output stream
+			DataInputStream inFromClient = new DataInputStream(connectionSocket.getInputStream());
+			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+			
+			//read client request
+			clientSentence = inFromClient.readUTF();
+			System.out.println("FROM CLIENT:\n" + clientSentence);
+			
+			//decoding client request
+			RequestDecoder dec = new RequestDecoder(clientSentence);
+			dec.decode();
+			
+			//calculate the result
+			Calculator cal = new Calculator(dec);
+			int result = 0;
+			float divideResult = 0.0f;
+			switch(cal.getOperation()) {
+			case "ADD":
+				result = cal.getAddResult();
+				break;
+			case "SUB":
+				result = cal.getSubResult();
+				break;
+			case "MUL":
+				result = cal.getMulResult();
+				break;
+			case "DIV":
+				divideResult = cal.getDivResult();
+				break;
+			}
+			
+			//encoding server response
+			if(cal.getOperation() == "DIV") {
+				System.out.println(divideResult);
+			}
+			else {
+				System.out.println(result);
+			}
+			
+			//response to client
+			outToClient.writeUTF(clientSentence + "\n");
+			outToClient.flush();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e);
+		}
+		
+		
+	}
+}

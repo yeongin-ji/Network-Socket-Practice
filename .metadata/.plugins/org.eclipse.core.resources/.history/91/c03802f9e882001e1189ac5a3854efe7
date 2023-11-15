@@ -1,0 +1,48 @@
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.Socket;
+
+public class TCPClient1 {
+	
+	public static void main(String[] args) {
+		String sentence;
+		String encodedSentence;
+		String serverSentence;
+		String serverIP = "127.0.0.1";
+		int nPort = 6789;
+		
+		try {
+			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+			Socket clientSocket = new Socket(serverIP, nPort);
+			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(
+					new InputStreamReader(clientSocket.getInputStream()));
+			
+			//User input phase
+			sentence = inFromUser.readLine();
+			
+			//encoding user input (arithmetic expression)
+			requestEncoder enc = new requestEncoder(sentence);
+			enc.encode(serverIP, nPort);
+			encodedSentence = enc.getEncodedRequest();
+			
+			//send request to server
+			outToServer.writeBytes(encodedSentence + "\n");
+			outToServer.flush();
+			
+			//read server response
+			String message = "";
+			while((serverSentence = inFromServer.readLine()) != null) {
+				message += serverSentence;
+			}
+			System.out.println("FROM SERVER:\n" + message);
+			
+			clientSocket.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e);
+		}
+	}
+	
+}

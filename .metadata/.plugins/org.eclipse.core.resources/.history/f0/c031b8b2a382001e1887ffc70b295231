@@ -1,0 +1,26 @@
+
+public class requestEncoder {
+	final String protocolVersion = "HMDP/1.0";
+	String request;
+	String encodedRequest;
+	String method;
+	String argu[] = new String[3];
+	float num1, num2;
+	
+	public requestEncoder(String request) { //ADD 1 2
+		// TODO Auto-generated constructor stub
+		this.request = request;
+	}
+	
+	public void encode(String IP, int port) {
+		String portStr = Integer.toString(port);
+		argu = request.split(" ");
+		method = argu[0];
+		num1 = Float.parseFloat(argu[1]);
+		num2 = Float.parseFloat(argu[2]);
+	}
+	
+	public String getEncodedRequest() {
+		return encodedRequest;
+	}
+}

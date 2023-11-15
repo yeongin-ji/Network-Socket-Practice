@@ -1,0 +1,72 @@
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
+public class ResponseEncoder {
+	public int responseCode = 200;
+	private int result = 0;
+	private float divResult = 0.0f;
+	private String encodedSentence;
+	private final String protocolVersion = "HMDP/1.0";
+	private final String codeStateStr_ok = "OK";
+	private final String codeStateStr_badRequest = "Bad Request";
+	private final String codeStateStr_divideByZero = "Divide By Zero";
+	private int divFlag = 0;
+	Timestamp currentTimestamp;
+	
+	public void setResult(int result) {
+		this.result = result;
+	}
+	
+	public void setResult(float divResult) {
+		this.divResult = divResult;
+		divFlag = 1;
+	}
+	
+	public void setResponseCode(int code) {
+		if(code == 400 || code == 401) {
+			responseCode = code;
+		}
+	}
+	
+	public void encode() {
+		currentTimestamp =  new Timestamp(System.currentTimeMillis());
+		String currentTimestampToString = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(currentTimestamp);
+		String codeStr = Integer.toString(responseCode);
+		String resultStr;
+		String codeStateStr;
+		
+		if(divFlag == 1)
+			resultStr = Float.toString(divResult);
+		else
+			resultStr = Integer.toString(result);
+		
+		switch(responseCode) {
+		case 400:
+			codeStateStr = codeStateStr_badRequest;
+			break;
+		case 401:
+			codeStateStr = codeStateStr_divideByZero;
+			break;
+		default:
+			codeStateStr = codeStateStr_ok;
+			break;
+		}
+		
+		if(responseCode == 200) {
+			encodedSentence = 
+					protocolVersion + " " + codeStr + " " + codeStateStr + "\n" +
+					"Date: " + currentTimestampToString + "\n\n" +
+					resultStr;
+		}
+		else {
+			encodedSentence = 
+					protocolVersion + " " + codeStr + " " + codeStateStr + "\n" +
+					"Date: " + currentTimestampToString;
+		}
+		
+	}
+	
+	public String getEncodedSentence() {
+		return encodedSentence;
+	}
+}

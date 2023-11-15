@@ -1,0 +1,26 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class ResponseDecoder {
+	private String raw;
+	private int statusCode;
+	
+	public ResponseDecoder(String raw) {
+		this.raw = raw;
+	}
+	
+	public void decode() {
+		//regular expression pattern
+		Pattern pattern = Pattern.compile("HMDP/1.0 (\\d{3})");
+		
+		//pattern matching
+		Matcher matcher = pattern.matcher(raw);
+		
+		if (matcher.find()) {
+            statusCode = Integer.parseInt(matcher.group(1)); 
+            System.out.println("Status Code: " + statusCode);
+        } else {
+            System.out.println("No match found.");
+        }
+	}
+}

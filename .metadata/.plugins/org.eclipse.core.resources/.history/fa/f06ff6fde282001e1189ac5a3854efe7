@@ -1,0 +1,39 @@
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.Socket;
+
+public class TCPClient1 {
+	/*
+	public static void main(String[] args) {
+		String sentence;
+		String modifiedSentence;
+		String serverIP = "127.0.0.1";
+		int nPort = 6789;
+		
+		try {
+			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+			Socket clientSocket = new Socket(serverIP, nPort);
+			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(
+					new InputStreamReader(clientSocket.getInputStream()));
+			sentence = inFromUser.readLine();
+			outToServer.writeBytes(sentence + '\n');
+			modifiedSentence = inFromServer.readLine();
+			System.out.println("FROM SERVER: " + modifiedSentence);
+			clientSocket.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e);
+		}
+	}
+	*/
+	
+	public static void main(String[] args) {
+		requestEncoder enc = new requestEncoder("ADD 10 20");
+		enc.encode("127.0.0.1", 1234);
+		System.out.println(enc.getEncodedRequest());
+		
+		ClientGUI gui = new ClientGUI();
+	}
+}

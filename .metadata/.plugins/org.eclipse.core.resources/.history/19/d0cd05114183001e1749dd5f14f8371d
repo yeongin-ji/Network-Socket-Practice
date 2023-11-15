@@ -1,0 +1,26 @@
+
+public class ResponseEncoder {
+	private int responseCode = 200;
+	private int result = 0;
+	private float divResult = 0.0f;
+	private String encodedSentence;
+	private final String protocolVersion = "HMDP/1.0";
+	
+	public ResponseEncoder(int result) {
+		this.result = result;
+	}
+	
+	public ResponseEncoder(float divResult) {
+		this.divResult = divResult;
+	}
+	
+	public void setResponseCode(int code) {
+		if(code == 400 || code == 401) {
+			this.responseCode = code;
+		}
+	}
+	
+	public void encode() {
+		
+	}
+}

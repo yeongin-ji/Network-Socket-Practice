@@ -1,0 +1,42 @@
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+
+public class ClientGUI extends JFrame {
+	
+	JTextField textField;
+	JButton submitButton;
+	
+    JTextPane textPane;
+    JScrollPane scrollPane;
+
+	
+	public ClientGUI() {
+		setLayout(new FlowLayout());
+		
+		textPane = new JTextPane();
+		textPane.setContentType("text/html"); // Set content type to HTML for styled text
+	    textPane.setText("<html><body><p style='color:red;'>This is a red text.</p></body></html>");
+	    textPane.setEditable(false);
+	    textPane.setPreferredSize(new Dimension(350, 400));
+	    
+		scrollPane = new JScrollPane(textPane);
+		
+		textField = new JTextField("Enter text here", 27);
+		submitButton = new JButton("Submit");
+		submitButton.setPreferredSize(new Dimension(10, 20));
+		
+		this.add(scrollPane);
+		this.add(textField);
+		this.add(submitButton);
+		
+		this.setSize(400, 500);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setVisible(true);
+	}
+}
