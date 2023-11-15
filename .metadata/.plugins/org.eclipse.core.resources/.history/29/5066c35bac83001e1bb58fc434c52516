@@ -31,7 +31,6 @@ public class TCPServer1 {
 		}
 	}
 	
-	//implements multi thread
 	private static class TServer implements Runnable{
 		private Socket socket;
 		String clientSentence;

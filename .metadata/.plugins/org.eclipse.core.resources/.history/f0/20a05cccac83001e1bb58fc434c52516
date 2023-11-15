@@ -6,8 +6,6 @@ public class ResponseEncoder {
 	private int result = 0;
 	private float divResult = 0.0f;
 	private String encodedSentence;
-	
-	//define response code & protocol version
 	private final String protocolVersion = "HMDP/1.0";
 	private final String codeStateStr_ok = "OK";
 	private final String codeStateStr_badRequest = "Bad Request";
@@ -19,20 +17,17 @@ public class ResponseEncoder {
 		this.result = result;
 	}
 	
-	//set float division result and flag ++
 	public void setResult(float divResult) {
 		this.divResult = divResult;
 		divFlag = 1;
 	}
 	
-	//if occur exception, then set response code 
 	public void setResponseCode(int code) {
 		if(code == 400 || code == 401) {
 			responseCode = code;
 		}
 	}
 	
-	//make encoded sentence
 	public void encode() {
 		currentTimestamp =  new Timestamp(System.currentTimeMillis());
 		String currentTimestampToString = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(currentTimestamp);

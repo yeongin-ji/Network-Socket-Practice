@@ -7,7 +7,6 @@ public class RequestDecoder {
 	ResponseEncoder enc;
 	int num1, num2;
 	
-	//construct decoder
 	public RequestDecoder(String raw) {
 		this.raw = raw;
 		enc = new ResponseEncoder();

@@ -22,7 +22,6 @@ public class ClientGUI extends JFrame implements ActionListener {
     
     String logMessage = "";
 	
-    //construct and visualization ClientGUI
 	public ClientGUI() {
 		setLayout(new FlowLayout());
 		
@@ -47,13 +46,11 @@ public class ClientGUI extends JFrame implements ActionListener {
 		this.setVisible(true);
 	}
 	
-	//append log to gui textpane
 	public void appendLogger(String log) {
 		logMessage += log + "\n";
 		textPane.setText(logMessage);
 	}
-	
-	//define button event
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// Get the text from the text field
